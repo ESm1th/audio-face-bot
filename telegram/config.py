@@ -9,8 +9,16 @@ DEBUG = bool(int(os.environ['DEBUG']))
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
-PHOTOS_DIR = os.path.join(MEDIA_DIR, 'photos')
-VOICES_DIR = os.path.join(MEDIA_DIR, 'voices')
+
+DIRS = {
+    'media': MEDIA_DIR,
+    'photos': os.path.join(MEDIA_DIR, 'photos'),
+    'voices': os.path.join(MEDIA_DIR, 'voices')
+}
+
+for dir in DIRS.values():
+    if not os.path.exists(dir):
+        os.mkdir(dir)
 
 HOST = 'localhost'
 PORT = 8000

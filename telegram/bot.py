@@ -12,8 +12,7 @@ from config import (
     HOST,
     PORT,
     DEBUG,
-    VOICES_DIR,
-    PHOTOS_DIR
+    DIRS
 )
 from face_detection import FaceDetector
 
@@ -45,7 +44,7 @@ async def voice_handler(message: dict) -> None:
     voice = message['voice']
     mime_type = voice['mime_type'].split('/').pop()
     file_path = create_filepath(
-        message, VOICES_DIR, 'wav', voice['file_unique_id']
+        message, DIRS['voices'], 'wav', voice['file_unique_id']
     )
 
     # send request to get filepath of voice file
@@ -88,7 +87,7 @@ async def photo_handler(message: dict) -> None:
     # save image if face/faces exists on it
     if not isinstance(faces, tuple):
         path = create_filepath(
-            message, PHOTOS_DIR, 'png', photo['file_id']
+            message, DIRS['photos'], 'png', photo['file_id']
         )
         cv2.imwrite(path, image)
 
