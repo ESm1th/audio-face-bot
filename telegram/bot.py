@@ -18,7 +18,7 @@ from face_detection import FaceDetector
 
 
 app = Sanic(__name__)
-
+face_detector = FaceDetector()
 
 API_URL = 'https://api.telegram.org/'
 BOT_URL = API_URL + 'bot' + BOT_TOKEN + '/'
@@ -43,9 +43,7 @@ async def voice_handler(message: dict) -> None:
     """Getting voice file, process it and save to local dir."""
     voice = message['voice']
     mime_type = voice['mime_type'].split('/').pop()
-    file_path = create_filepath(
-        message, DIRS['voices'], 'wav', voice['file_unique_id']
-    )
+    file_path = create_filepath(message, DIRS['voices'], 'audio', 'wav')
 
     # send request to get filepath of voice file
     voice_info_response = await asks.get(
@@ -80,15 +78,12 @@ async def photo_handler(message: dict) -> None:
     file_response = await asks.get(BOT_FILE_URL + '/' + photo_file_path)
 
     # detect faces on image
-    face_detector = FaceDetector()
     image = face_detector.load_image_from_bytes(file_response.body)
     faces = face_detector.detect_faces(image)
 
     # save image if face/faces exists on it
     if not isinstance(faces, tuple):
-        path = create_filepath(
-            message, DIRS['photos'], 'png', photo['file_id']
-        )
+        path = create_filepath(message, DIRS['photos'], 'image', 'png')
         cv2.imwrite(path, image)
 
 
@@ -97,14 +92,23 @@ def create_get_file_info_url(file_id: str) -> str:
     return BOT_URL + 'getFile?' + urlencode({'file_id': file_id})
 
 
-def create_filepath(message: dict, dir: str, mime: str, file_id: str) -> str:
-    """Construct file path from the arguments passed."""
-    chat_title = message['chat']['title']
-    user_id = message['from']['id']
-    date = message['date']
-    filename_pices = [chat_title, str(user_id), str(date), file_id]
-    filename = '_'.join(filename_pices) + '.' + mime
-    return os.path.join(dir, filename)
+def create_filepath(message: dict, dir: str, file_type: str, mime: str) -> str:
+    """
+    Construct file path from the arguments passed.
+    `file_type` - 'audio' for voices or 'image' for images.
+    """
+    user_id = str(message['from']['id'])
+    user_path = os.path.join(dir, user_id)
+
+    if not os.path.exists(user_path):
+        os.mkdir(user_path)
+
+    filename = '{type}_message_{num}.{mime}'.format(
+        type=file_type,
+        num=len(os.listdir(user_path)),
+        mime=mime
+    )
+    return os.path.join(user_path, filename)
 
 
 if __name__ == '__main__':

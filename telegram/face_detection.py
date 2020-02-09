@@ -10,7 +10,7 @@ class FaceDetector():
         self,
         factor: float = 1.2,
         neighbors: int = 5,
-        minsize: tuple = (10, 10)
+        minsize: tuple = (30, 30)
     ) -> None:
         self._factor = factor
         self._neighbors = neighbors

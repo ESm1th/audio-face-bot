@@ -16,6 +16,7 @@ DIRS = {
     'voices': os.path.join(MEDIA_DIR, 'voices')
 }
 
+# create working directories if them not exists
 for dir in DIRS.values():
     if not os.path.exists(dir):
         os.mkdir(dir)
