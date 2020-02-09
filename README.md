@@ -1,5 +1,5 @@
 # audio_face_bot
-Telegram bot that save audio messages and photos with faces from chat to database.
+Telegram bot that save audio messages and photos with faces from chat to local directories.
 
 ### How to start
 Create telegram `bot` and obtain `token`. You can check how to do that by this [link](https://core.telegram.org/bots#6-botfather)
