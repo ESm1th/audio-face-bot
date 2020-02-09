@@ -74,4 +74,4 @@ Create group or channel and add created `bot` to it. From this moment every mess
 
 All voices will convert to `wav` with frame rate `16000` and saved to local folder `telegram/media/voices/`.
 
-All images with face/faces on them will saved to local folder `telegram/media/voices/. 
+All images with face/faces on them will saved to local folder `telegram/media/voices/`. 
