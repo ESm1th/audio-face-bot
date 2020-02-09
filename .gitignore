@@ -1,6 +1,7 @@
 *.pyc
 __pycache__/
-*.sqlite3
 .vscode/
 .env
 ngrok
+media/
+*.json

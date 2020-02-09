@@ -3,17 +3,19 @@ from io import BytesIO
 from urllib.parse import urlencode
 
 import asks
+import cv2
 from sanic import Sanic, response
 from pydub import AudioSegment
-import cv2
 
-from config import (
+from telegram.config import (
     BOT_TOKEN,
     HOST,
     PORT,
     DEBUG,
-    VOICES_DIR
+    VOICES_DIR,
+    PHOTOS_DIR
 )
+from telegram.face_detection import FaceDetector
 
 
 app = Sanic(__name__)
@@ -25,7 +27,7 @@ BOT_FILE_URL = API_URL + 'file/' + 'bot' + BOT_TOKEN
 
 
 @app.post('/')
-async def request_handler(request) -> 'HTTPResponse':
+async def request_handler(request):
     message = request.json.get('message')
     if 'photo' in message:
         await photo_handler(message)
@@ -53,27 +55,33 @@ async def voice_handler(message: dict) -> None:
     # process voice
     voice_memory_file = BytesIO(file_response.body)
     audio = AudioSegment.from_file(voice_memory_file, format=mime_type)
-    audio.set_frame_rate(16000)
+    audio = audio.set_frame_rate(16000)
     audio.export(file_path, format='wav')
 
 
 async def photo_handler(message: dict) -> None:
-    photos = message['photo']
-    print(photos)
-    for photo in photos:
+    photo = message['photo'].pop()
 
-        # send request to get filepath of photo file
-        photo_info_response = await asks.get(
-            create_get_file_info_url(photo['file_id'])
+    # send request to get filepath of photo file
+    photo_info_response = await asks.get(
+        create_get_file_info_url(photo['file_id'])
+    )
+    photo_file_path = photo_info_response.json()['result']['file_path']
+
+    # download photo file from telegram
+    file_response = await asks.get(BOT_FILE_URL + '/' + photo_file_path)
+
+    # detect faces on image
+    face_detector = FaceDetector()
+    image = face_detector.load_image_from_bytes(file_response.body)
+    faces = face_detector.detect_faces(image)
+
+    # save image if faces exist on it
+    if not isinstance(faces, tuple):
+        path = create_filepath(
+            message, PHOTOS_DIR, 'png', photo['file_id']
         )
-        photo_file_path = photo_info_response.json()['result']['file_path']
-
-        # download photo file from telegram
-        file_response = await asks.get(BOT_FILE_URL + '/' + photo_file_path)
-
-        # process photo
-
-        # to do
+        cv2.imwrite(path, image)
 
 
 def create_get_file_info_url(file_id: str) -> str:

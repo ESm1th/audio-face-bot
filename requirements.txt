@@ -1,4 +1,4 @@
-asks-2.3.6
+asks==2.3.6
 sanic==19.12.2
 pydub==0.23.1
 opencv-python==4.2.0.32
