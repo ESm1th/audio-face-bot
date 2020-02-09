@@ -9,7 +9,7 @@ Clone repository:
 $ git clone https://github.com/ESm1th/audio_face_bot.git
 ```
 
-Change working derictory to project:
+Change working directory to project:
 ```
 $ cd audio_face_bot
 ```
@@ -54,3 +54,24 @@ For example forwarding row in opened terminal with running `ngrok`
 https://afafe4e.ngrok.io -> http://localhost:8000
 ```
 You should copy this part - `https://afafe4e.ngrok.io`
+
+Send request to set `webhook`:
+```
+$ curl https://api.telegram.org/bot{your_bot_token}/setWebHook?url=https://afafe4e.ngrok.io
+```
+
+Response for this request:
+```
+$ {"ok":true,"result":true,"description":"Webhook was set"}
+```
+Ok. Bot is running, local web server is running, `ngrok` is running and webhook is set.
+
+### Bot's working logic
+Bot must work in `disabled` private mode.
+This mode can be set by sending `/setprivacy` command in chat with `BotFather` in telegram. Than select your bot and further select `Disable`. After this manipulation `BotFather` send you message: `Success! The new status is: DISABLED.`
+
+Create group or channel and add created `bot` to it. From this moment every message from every member of this group/channel will send to server and processed.
+
+All voices will convert to `wav` with frame rate `16000` and saved to local folder `telegram/media/voices/`.
+
+All images with face/faces on them will saved to local folder `telegram/media/voices/. 
