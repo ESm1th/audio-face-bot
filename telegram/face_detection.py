@@ -29,8 +29,10 @@ class FaceDetector():
         return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     def detect_faces(self, image):
-        """Detect faces on image and return them as `numpy` array or
-        return empty tuple if faces not detected."""
+        """
+        Detect faces on image and return them as `numpy` array or
+        return empty tuple if faces not detected.
+        """
         faces = self._face_cascade.detectMultiScale(
             self.convert_to_grayscale(image),
             scaleFactor=self._factor,
