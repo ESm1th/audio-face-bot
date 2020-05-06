@@ -6,7 +6,7 @@ Create telegram `bot` and obtain `token`. You can check how to do that by this [
 
 Clone repository:
 ```
-$ git clone https://github.com/ESm1th/audio_face_bot.git
+$ git clone https://github.com/ESm1th/audio-face-bot.git
 ```
 
 Change working directory to project:
