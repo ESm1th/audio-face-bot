@@ -1,4 +1,4 @@
-# audio_face_bot
+# audio-face-bot
 Telegram bot that save audio messages and photos with faces from chat to local directories.
 
 ### How to start
