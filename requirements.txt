@@ -1,5 +1,5 @@
 asks==2.3.6
-sanic==19.12.2
+sanic==20.12.6
 pydub==0.23.1
 opencv-python==4.2.0.32
 python-dotenv==0.10.5
